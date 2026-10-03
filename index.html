@@ -16,7 +16,7 @@
     -webkit-text-size-adjust: 100%;
   }
   .page { max-width: 560px; margin: 0 auto; padding: 26px 16px 56px; }
-  .entete { text-align: center; margin-bottom: 18px; position: relative; }
+  .entete { text-align: center; margin-bottom: 14px; position: relative; }
   .entete h1 { font-size: 29px; margin: 0 0 6px; font-weight: 600; }
   .soust { color: #7e8a97; font-size: 15px; margin: 0; }
   #btnReglages {
@@ -26,24 +26,41 @@
   }
   #btnReglages:hover { color: #2c3642; }
 
-  .jours { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 16px 0 20px; }
+  .choix { display: block; text-align: center; margin: 0 0 6px; }
+  .choix span { display: block; font-size: 12.5px; letter-spacing: 1.2px; text-transform: uppercase; color: #97a2ad; margin-bottom: 4px; }
+  .choix select {
+    font-family: inherit; font-size: 15.5px; color: #2c3642; text-align: center; text-align-last: center;
+    border: 1.5px solid #e2ddd5; border-radius: 12px; padding: 9px 12px; background: #fff; max-width: 100%;
+  }
+
+  .jours { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 14px 0 20px; }
+  .jours.compact { gap: 6px; }
   .pastille {
     width: 44px; height: 44px; border-radius: 50%;
     border: 1.5px solid #e2ddd5; background: #ffffff; color: #96a0ab;
     font-size: 16px; font-family: inherit; cursor: pointer; padding: 0;
     --j: #036798; --js: #e3eef8;
   }
+  .jours.compact .pastille { width: 38px; height: 38px; font-size: 14.5px; }
   .pastille.rempli { background: var(--js); border-color: var(--j); color: var(--j); font-weight: 600; }
   .pastille.active { background: var(--j); border-color: var(--j); color: #fff; font-weight: 600; }
 
   .carte {
-    background: #ffffff; border-radius: 20px; padding: 24px 20px 18px;
+    background: #ffffff; border-radius: 20px; padding: 24px 20px 18px; position: relative;
     border-left: 4px solid var(--j, #036798);
     box-shadow: 0 10px 30px rgba(46, 38, 28, 0.07);
   }
   .jourlabel { color: var(--j, #036798); font-size: 13px; letter-spacing: 1.6px; text-transform: uppercase; margin: 0 0 10px; font-weight: 600; }
-  .intro { color: #8a8391; font-size: 14.5px; margin: 0 0 12px; }
-  .question { font-size: 21px; line-height: 1.45; font-weight: 600; margin: 0 0 16px; }
+  .btnAudio {
+    position: absolute; top: 14px; right: 14px;
+    width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+    border: 1.5px solid #e4dfd7; background: #fff; color: #6b7684;
+    display: flex; align-items: center; justify-content: center; padding: 0;
+  }
+  .btnAudio:hover { border-color: #036798; color: #036798; }
+  .btnAudio.on { background: #036798; border-color: #036798; color: #fff; }
+  .intro { color: #8a8391; font-size: 14.5px; margin: 0 0 12px; padding-right: 44px; }
+  .question { font-size: 21px; line-height: 1.45; font-weight: 600; margin: 0 0 16px; padding-right: 8px; }
   textarea {
     width: 100%; min-height: 132px; resize: vertical;
     border: 1.5px solid #e4dfd7; border-radius: 14px; padding: 12px 14px;
@@ -90,13 +107,20 @@
 <div class="page">
   <header class="entete">
     <h1>Mieux-être</h1>
-    <p class="soust">Sept questions d'autocompassion — une par jour, à ton rythme, sans pression.</p>
+    <p class="soust">Des questions douces, une par jour, à ton rythme, sans pression.</p>
     <button id="btnReglages" type="button">Réglages</button>
   </header>
+
+  <label class="choix"><span>Parcours</span>
+    <select id="selParcours" aria-label="Choisir un parcours"></select>
+  </label>
 
   <nav class="jours" id="navJours" aria-label="Choisir un jour"></nav>
 
   <section class="carte" id="carte">
+    <button class="btnAudio" id="btnAudio" type="button" aria-pressed="false" title="Écouter la question">
+      <svg id="icoAudio" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+    </button>
     <p class="jourlabel" id="jourLabel"></p>
     <p class="intro" id="intro"></p>
     <h2 class="question" id="question"></h2>
@@ -108,8 +132,8 @@
     </div>
   </section>
 
-  <p class="toutnote" id="toutnote" hidden>Tes sept réponses sont là, au complet — elles t'attendent quand tu veux les relire.</p>
-  <button class="bouton large" id="btnResume" type="button" hidden style="margin-top:12px">Voir mon résumé de sept jours</button>
+  <p class="toutnote" id="toutnote" hidden>Ton parcours est complet — tes réponses t'attendent quand tu veux les relire.</p>
+  <button class="bouton large" id="btnResume" type="button" hidden style="margin-top:12px">Voir mon résumé de parcours</button>
   <p class="mention">Un outil d'Authentique sexologie. L'utilisation est autonome et ne remplace pas une consultation ni un suivi avec une sexologue. Il est possible de revoir vos réponses lors d'une intervention brève : <a href="https://authentiquesexo.ca" target="_blank" rel="noopener">authentiquesexo.ca</a>.</p>
 </div>
 
@@ -125,8 +149,8 @@
 
 <div class="voile" id="voileResume" hidden></div>
 <section class="panneau resume" id="resume" hidden>
-  <h2>Ton parcours, ces sept jours</h2>
-  <p class="intro" style="margin-top:0">Voici ce que tu as semé cette semaine — tes mots, dans l'ordre. Touche un jour pour le relire.</p>
+  <h2>Ton parcours</h2>
+  <p class="intro" style="margin-top:0">Voici ce que tu as semé — tes mots, dans l'ordre. Touche un jour pour le relire.</p>
   <div id="resumeCorps"></div>
   <button class="bouton clair large" id="btnExporterResume" type="button">Exporter mon résumé (texte)</button>
   <button class="bouton large" id="btnFermerResume" type="button">Fermer</button>
@@ -136,27 +160,157 @@
 (function () {
   "use strict";
 
-  var QUESTIONS = [
-    "Prends un moment. Qu'est-ce qui est là, ces jours-ci — qu'est-ce qui est difficile, qu'est-ce qui est doux ?",
-    "Si une personne que tu aimes vivait exactement ce que tu vis en ce moment, qu'est-ce que tu lui dirais ?",
-    "Il y a des phrases qu'on se dit à soi-même et qu'on ne dirait jamais à quelqu'un d'autre. Lesquelles reviennent chez toi ?",
-    "Qu'est-ce que tu traverses en ce moment que d'autres traversent aussi, sans le montrer ?",
-    "De quoi as-tu besoin, là, vraiment ? Pas ce qui serait raisonnable — ce dont tu as besoin.",
-    "Quelle petite chose, aujourd'hui, prendrait soin de toi ? Quelque chose de simple, de faisable.",
-    "Comment veux-tu te parler, à partir de maintenant ? Qu'est-ce que tu veux garder de cette semaine ?"
+  var PARCOURS = [
+    {
+      id: "auto",
+      titre: "Autocompassion · 7 jours",
+      desc: "Sept questions douces, une par jour.",
+      Q: [
+        "Prends un moment. Qu'est-ce qui est là, ces jours-ci — qu'est-ce qui est difficile, qu'est-ce qui est doux ?",
+        "Si une personne que tu aimes vivait exactement ce que tu vis en ce moment, qu'est-ce que tu lui dirais ?",
+        "Il y a des phrases qu'on se dit à soi-même et qu'on ne dirait jamais à quelqu'un d'autre. Lesquelles reviennent chez toi ?",
+        "Qu'est-ce que tu traverses en ce moment que d'autres traversent aussi, sans le montrer ?",
+        "De quoi as-tu besoin, là, vraiment ? Pas ce qui serait raisonnable — ce dont tu as besoin.",
+        "Quelle petite chose, aujourd'hui, prendrait soin de toi ? Quelque chose de simple, de faisable.",
+        "Comment veux-tu te parler, à partir de maintenant ? Qu'est-ce que tu veux garder de cette semaine ?"
+      ],
+      I: [
+        "On commence tout doucement. Pas besoin de belles phrases — juste ce qui est vrai aujourd'hui.",
+        "On juge souvent les autres avec plus de douceur qu'on ne se juge soi-même. Cette fois, emprunte cette voix-là pour toi.",
+        "Personne d'autre ne les entend, mais elles prennent de la place. Les nommer, c'est déjà les alléger un peu.",
+        "Ce qui est lourd est souvent plus partagé qu'on le pense. L'écrire peut enlever un peu de solitude.",
+        "Pas besoin que ce soit raisonnable ou réalisable. Juste d'être honnête avec ce qui monte.",
+        "On cherche quelque chose de petit et de vrai. Si c'est faisable cette semaine, tant mieux — sinon, ce sera pour un autre jour, sans reproche.",
+        "Dernière question. Garde de cette semaine ce qui te fait du bien — et laisse aller le reste, sans culpabilité."
+      ]
+    },
+    {
+      id: "trois",
+      titre: "Trois semaines pour soi · 21 jours",
+      desc: "Regarder, se parler, avancer.",
+      Q: [
+        "On commence large : qu'est-ce qui occupe le plus de place dans ta tête, ces jours-ci ?",
+        "Qu'est-ce qui va bien, en ce moment — même une petite affaire ?",
+        "Qu'est-ce qui t'épuise le plus, cette semaine ?",
+        "À quoi ressemble ta journée parfaite, toute simple ?",
+        "Qu'est-ce que tu portes pour d'autres en ce moment ?",
+        "Qu'est-ce que tu aimerais qu'on te dise, ces jours-ci ?",
+        "Première semaine terminée. Qu'est-ce que tu remarques, en relisant ?",
+        "Quelle phrase te dis-tu, ces temps-ci, que tu n'oserais jamais dire à un proche ?",
+        "À quel moment t'es-tu parlé durement cette semaine ? Que s'est-il passé juste avant ?",
+        "Qu'est-ce que tu dirais à une amie qui vit exactement ce que tu vis ?",
+        "Quelle force t'a aidé·e récemment, que tu t'attribues rarement ?",
+        "Qu'est-ce qu'une personne qui t'aime dirait de bon à ton sujet ?",
+        "Qu'est-ce qui serait plus doux à te dire, pour la même chose ?",
+        "Comment veux-tu te parler, à partir de maintenant ? Écris ta phrase.",
+        "De quoi as-tu besoin de lâcher, doucement, sans drame ?",
+        "Quelle petite chose ferais-tu, si tu te faisais passer en premier une fois ?",
+        "Qu'est-ce qui a changé depuis le début du parcours, même imperceptiblement ?",
+        "À qui demanderais-tu de l'aide, si c'était facile ? Qu'est-ce qui rend ça difficile ?",
+        "Quelle promesse simple veux-tu te faire, que tu peux tenir ?",
+        "Qu'est-ce que tu veux garder de ces trois semaines ?",
+        "Dernier jour. Qu'est-ce que tu dirais à la personne qui a commencé ce parcours il y a trois semaines ?"
+      ],
+      I: [
+        "Pas besoin de trier — pose ce qui est là, en vrac. C'est le premier pas.",
+        "On regarde aussi ce qui tient. Les douceurs comptent autant que le reste.",
+        "Nommer la fatigue, c'est déjà commencer à la remettre à sa juste place.",
+        "Pas des vacances — une vraie journée ordinaire qui ferait du bien. Sers-t'en comme boussole.",
+        "On porte souvent plus qu'on pense. Ce n'est pas un reproche — juste une constatation.",
+        "La phrase que tu attends d'un proche, écris-la. Elle dit ce dont tu as besoin.",
+        "Doucement — pas de bilan sévère. Juste ce que tu vois.",
+        "Reconnais-la sans la défendre. Ce n'est pas la vérité — juste une habitude.",
+        "Souvent la dureté arrive quand on est fatigué·e, débordé·e, ou blessé·e. Regarde le contexte, pas juste la phrase.",
+        "Écris-le pour de vrai, au « tu ». Puis relis-le en pensant que c'est aussi pour toi.",
+        "L'humilité cache parfois de vraies forces. Nommes-en une, sans la réduire.",
+        "Emprunte son regard un instant. Qu'est-ce qu'elle voit, que tu ne vois plus ?",
+        "Même constat, autre voix. Trouve la version qui aide au lieu de punir.",
+        "Une phrase courte, facile à se rappeler. Ce sera ton rappel des prochains jours.",
+        "Une attente, une culpabilité, un projet de trop ? Ce qu'on lâche libère de la place.",
+        "Petite et vraie. Propose-la-toi comme une expérience, pas comme une obligation.",
+        "Les vrais changements commencent petit. Regarde finement.",
+        "Demander est une force, pas un aveu. Écris le nom, pour l'avoir en tête.",
+        "Une seule. Tenable même dans une mauvaise semaine.",
+        "Une chose à garder, une chose à laisser. C'est assez.",
+        "Elle a continué. Dis-lui quelque chose de vrai — et garde-le quelque part où tu le reverras."
+      ]
+    },
+    {
+      id: "conf",
+      titre: "Confiance · 7 jours",
+      desc: "Retrouver ses appuis.",
+      Q: [
+        "Qu'est-ce que tu réussis, ces temps-ci, que tu minimises ?",
+        "Quand t'es-tu senti·e à ta place, récemment ?",
+        "Qu'est-ce que tu t'empêches de faire, par peur du regard des autres ?",
+        "Quelle preuve as-tu que tu peux faire des choses difficiles ?",
+        "Quel compliment ou quelle réussite as-tu balayé·e du revers de la main ?",
+        "Si la confiance était un pas, pas un état — quel serait le prochain pas ?",
+        "Comment veux-tu nourrir ta confiance, doucement, dans les prochains jours ?"
+      ],
+      I: [
+        "On voit vite ce qui manque, moins ce qui marche. Regarde ce qui marche.",
+        "Un moment de justesse, petit ou grand. Il dit quelque chose de tes forces.",
+        "Nomme la peur et le souhait, côte à côte. Lequel mérite plus de place ?",
+        "Pas un slogan — une preuve vraie, avec une date si possible. Tu en as plus d'une.",
+        "Reçois-le pour de vrai, le temps de l'écrire.",
+        "Pas besoin d'être sûr·e. Juste curieu·se et en mouvement.",
+        "Une pratique minuscule et régulière vaut mieux qu'un grand serment."
+      ]
+    },
+    {
+      id: "cole",
+      titre: "Colère · 7 jours",
+      desc: "Écouter ce qu'elle protège.",
+      Q: [
+        "Sur quoi es-tu en colère, en ce moment ? Écris-le sans filtre.",
+        "Qu'est-ce qui a allumé la mèche, la dernière fois ?",
+        "Qu'est-ce que ta colère essaie de protéger ?",
+        "Comment la colère s'exprime-t-elle chez toi — dedans, dehors, ou coincée ?",
+        "Qu'est-ce qui t'aiderait à redescendre, un vrai truc qui marche pour toi ?",
+        "Qu'est-ce que tu pourrais dire calmement, une fois la vague passée ?",
+        "Comment veux-tu prendre soin de ta colère, à partir de maintenant ?"
+      ],
+      I: [
+        "La colère arrive souvent pour protéger quelque chose d'important. Écoute ce qu'elle défend.",
+        "Cherche la goutte de trop — souvent minuscule, souvent significative.",
+        "Une limite, une valeur, une fatigue ? Derrière la colère, il y a souvent une demande.",
+        "Il n'y a pas de bonne réponse. Juste ton rythme habituel, à reconnaître.",
+        "Marche, douche, musique, silence, écrire ? Note ce qui t'aide, pour t'en souvenir au bon moment.",
+        "La phrase d'après — celle qui pose la limite sans casser le lien.",
+        "C'est une information précieuse, pas une ennemie. À écouter, pas à étouffer."
+      ]
+    },
+    {
+      id: "deui",
+      titre: "Deuil et transitions · 7 jours",
+      desc: "Traverser les passages.",
+      Q: [
+        "Qu'est-ce qui a changé dans ta vie, récemment — que tu l'aies voulu ou non ?",
+        "De quoi as-tu le plus besoin, en ce moment : parler, te reposer, ou qu'on te fiche la paix ?",
+        "Qu'est-ce qui est difficile à dire, que tu portes seul·e ?",
+        "Quel souvenir revient souvent ? Décris-le comme il vient.",
+        "Qu'est-ce qui t'aide à traverser les jours plus lourds ?",
+        "Qu'est-ce que tu aimerais faire pour prendre soin de toi cette semaine ?",
+        "Qu'est-ce que tu veux garder vivant — de la personne, de la période, de ce que tu as appris ?"
+      ],
+      I: [
+        "Les transitions comptent, même désirées : on laisse quelque chose derrière chaque début.",
+        "Tout le monde ne veut pas la même chose dans les passages difficiles. Toi, tu veux quoi ?",
+        "Pas d'obligation de le partager — mais l'écrire ici, c'est déjà le sortir un peu de toi.",
+        "Laisse-le venir sans le trier. Les souvenirs qui reviennent demandent à être regardés.",
+        "Un rituel, une personne, une marche, un café ? Les petits ancrages comptent aussi.",
+        "Quelque chose de faisable, même dans une semaine difficile.",
+        "Écris-le pour de vrai. Ce qu'on garde à l'écrit change parfois la manière d'avancer."
+      ]
+    }
   ];
-  var INTROS = [
-    "On commence tout doucement. Pas besoin de belles phrases — juste ce qui est vrai aujourd'hui.",
-    "On juge souvent les autres avec plus de douceur qu'on ne se juge soi-même. Cette fois, emprunte cette voix-là pour toi.",
-    "Personne d'autre ne les entend, mais elles prennent de la place. Les nommer, c'est déjà les alléger un peu.",
-    "Ce qui est lourd est souvent plus partagé qu'on le pense. L'écrire peut enlever un peu de solitude.",
-    "Pas besoin que ce soit raisonnable ou réalisable. Juste d'être honnête avec ce qui monte.",
-    "On cherche quelque chose de petit et de vrai. Si c'est faisable cette semaine, tant mieux — sinon, ce sera pour un autre jour, sans reproche.",
-    "Dernière question. Garde de cette semaine ce qui te fait du bien — et laisse aller le reste, sans culpabilité."
-  ];
-  var TONS = ["#036798", "#b8437e", "#7a2e4d", "#c1704a", "#5e8a72", "#c98a2b", "#2e8b7d"];
-  var SOFTS = ["#e3eef8", "#fbe9f1", "#f6e8ee", "#fdeee5", "#e9f2ec", "#fdf3e0", "#e6f4f1"];
-  var NB = QUESTIONS.length;
+  var TONS = ["#036798", "#b8437e", "#7a2e4d", "#c1704a", "#5e8a72", "#c98a2b", "#2e8b7d",
+              "#036798", "#b8437e", "#7a2e4d", "#c1704a", "#5e8a72", "#c98a2b", "#2e8b7d",
+              "#036798", "#b8437e", "#7a2e4d", "#c1704a", "#5e8a72", "#c98a2b", "#2e8b7d"];
+  var SOFTS = ["#e3eef8", "#fbe9f1", "#f6e8ee", "#fdeee5", "#e9f2ec", "#fdf3e0", "#e6f4f1",
+               "#e3eef8", "#fbe9f1", "#f6e8ee", "#fdeee5", "#e9f2ec", "#fdf3e0", "#e6f4f1",
+               "#e3eef8", "#fbe9f1", "#f6e8ee", "#fdeee5", "#e9f2ec", "#fdf3e0", "#e6f4f1"];
   var CLE = "mieux-etre-v1";
   var MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
 
@@ -166,7 +320,12 @@
     window.localStorage.removeItem("__test_mt");
   } catch (e) { stockageOk = false; }
 
-  var etat = { reponses: {} };
+  var etat = { version: 2, parcours: "auto", reponses: {} };
+
+  function parcoursCourant() {
+    for (var i = 0; i < PARCOURS.length; i++) if (PARCOURS[i].id === etat.parcours) return PARCOURS[i];
+    return PARCOURS[0];
+  }
 
   function charger() {
     if (!stockageOk) return;
@@ -174,10 +333,18 @@
       var brut = window.localStorage.getItem(CLE);
       if (!brut) return;
       var d = JSON.parse(brut);
-      if (d && d.reponses && typeof d.reponses === "object") {
-        for (var i = 1; i <= NB; i++) {
-          var v = d.reponses[String(i)];
-          if (typeof v === "string") etat.reponses[String(i)] = v;
+      if (!d || typeof d !== "object") return;
+      if (typeof d.parcours === "string") etat.parcours = d.parcours;
+      if (d.reponses && typeof d.reponses === "object") {
+        var cles = Object.keys(d.reponses);
+        var nouveauFormat = false;
+        for (var i = 0; i < cles.length; i++) if (cles[i].indexOf(":") !== -1) nouveauFormat = true;
+        for (var j = 0; j < cles.length; j++) {
+          var v = d.reponses[cles[j]];
+          if (typeof v !== "string") continue;
+          var k = cles[j];
+          if (!nouveauFormat && /^\d+$/.test(k)) k = "auto:" + k;
+          etat.reponses[k] = v;
         }
       }
     } catch (e) { /* on repart à vide */ }
@@ -186,7 +353,7 @@
   function sauver() {
     if (!stockageOk) return;
     try {
-      window.localStorage.setItem(CLE, JSON.stringify({ version: 1, reponses: etat.reponses }));
+      window.localStorage.setItem(CLE, JSON.stringify({ version: 2, parcours: etat.parcours, reponses: etat.reponses }));
     } catch (e) { /* silencieux */ }
   }
 
@@ -206,37 +373,58 @@
   var elResume = document.getElementById("resume");
   var elResumeCorps = document.getElementById("resumeCorps");
   var elEffacer = document.getElementById("btnEffacer");
+  var elSel = document.getElementById("selParcours");
+  var elAudio = document.getElementById("btnAudio");
+  var elIcoAudio = document.getElementById("icoAudio");
   var TEXTE_EFFACER = "Effacer toutes mes réponses";
 
   var jour = 1;
   var minuteur = null;
+  var audioEnCours = false;
+
+  function cle(i) { return etat.parcours + ":" + i; }
 
   function repondu(i) {
-    var r = etat.reponses[String(i)];
+    var r = etat.reponses[cle(i)];
     return !!(r && r.replace(/\s/g, "") !== "");
   }
 
   function premierJourACrire() {
-    for (var i = 1; i <= NB; i++) if (!repondu(i)) return i;
-    return NB;
+    var p = parcoursCourant();
+    for (var i = 1; i <= p.Q.length; i++) if (!repondu(i)) return i;
+    return p.Q.length;
   }
 
   function toutRepondu() {
-    for (var i = 1; i <= NB; i++) if (!repondu(i)) return false;
+    var p = parcoursCourant();
+    for (var i = 1; i <= p.Q.length; i++) if (!repondu(i)) return false;
     return true;
   }
 
+  function remplirSelecteur() {
+    elSel.textContent = "";
+    for (var i = 0; i < PARCOURS.length; i++) {
+      var o = document.createElement("option");
+      o.value = PARCOURS[i].id;
+      o.textContent = PARCOURS[i].titre;
+      if (PARCOURS[i].id === etat.parcours) o.selected = true;
+      elSel.appendChild(o);
+    }
+  }
+
   function faireAller(n) {
-    return function () { aller(n); };
+    return function () { aller(n); }
   }
 
   function rendreJours() {
+    var p = parcoursCourant();
+    elJours.className = "jours" + (p.Q.length > 10 ? " compact" : "");
     var frag = document.createDocumentFragment();
-    for (var i = 1; i <= NB; i++) {
+    for (var i = 1; i <= p.Q.length; i++) {
       var b = document.createElement("button");
       b.type = "button";
-      b.style.setProperty("--j", TONS[i - 1]);
-      b.style.setProperty("--js", SOFTS[i - 1]);
+      b.style.setProperty("--j", TONS[(i - 1) % TONS.length]);
+      b.style.setProperty("--js", SOFTS[(i - 1) % SOFTS.length]);
       b.className = "pastille" + (i === jour ? " active" : "") + (repondu(i) ? " rempli" : "");
       b.textContent = String(i);
       b.setAttribute("aria-label", "Jour " + i + (repondu(i) ? " — répondu" : ""));
@@ -247,14 +435,22 @@
     elJours.appendChild(frag);
   }
 
+  function arreterAudio() {
+    audioEnCours = false;
+    elAudio.classList.remove("on");
+    elAudio.setAttribute("aria-pressed", "false");
+    try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
+  }
+
   function rendre() {
-    elCarte.style.setProperty("--j", TONS[jour - 1]);
-    elLabel.textContent = "Jour " + jour + " sur " + NB;
-    elIntro.textContent = INTROS[jour - 1];
-    elQuestion.textContent = QUESTIONS[jour - 1];
-    elReponse.value = etat.reponses[String(jour)] || "";
+    var p = parcoursCourant();
+    elCarte.style.setProperty("--j", TONS[(jour - 1) % TONS.length]);
+    elLabel.textContent = "Jour " + jour + " sur " + p.Q.length;
+    elIntro.textContent = p.I[jour - 1];
+    elQuestion.textContent = p.Q[jour - 1];
+    elReponse.value = etat.reponses[cle(jour)] || "";
     elPrec.disabled = jour <= 1;
-    elSuiv.disabled = jour >= NB;
+    elSuiv.disabled = jour >= p.Q.length;
     rendreJours();
     var fini = toutRepondu();
     elToutNote.hidden = !fini;
@@ -262,14 +458,45 @@
   }
 
   function aller(n) {
-    if (n < 1 || n > NB || n === jour) return;
+    var p = parcoursCourant();
+    if (n < 1 || n > p.Q.length || n === jour) return;
     if (minuteur) { clearTimeout(minuteur); minuteur = null; sauver(); }
+    arreterAudio();
     jour = n;
     rendre();
   }
 
+  // ---- Lecture audio ----
+  elAudio.addEventListener("click", function () {
+    if (!("speechSynthesis" in window)) return;
+    if (audioEnCours) { arreterAudio(); return; }
+    try {
+      var p = parcoursCourant();
+      var u = new SpeechSynthesisUtterance(p.I[jour - 1] + " " + p.Q[jour - 1]);
+      u.lang = "fr-CA";
+      u.rate = 0.98;
+      u.onend = function () { arreterAudio(); };
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
+      audioEnCours = true;
+      elAudio.classList.add("on");
+      elAudio.setAttribute("aria-pressed", "true");
+    } catch (e) { arreterAudio(); }
+  });
+  if (!("speechSynthesis" in window)) elAudio.style.display = "none";
+  window.addEventListener("pagehide", function () { arreterAudio(); });
+
+  elSel.addEventListener("change", function () {
+    etat.parcours = elSel.value;
+    arreterAudio();
+    if (minuteur) { clearTimeout(minuteur); minuteur = null; }
+    sauver();
+    jour = premierJourACrire();
+    rendre();
+  });
+
   elReponse.addEventListener("input", function () {
-    etat.reponses[String(jour)] = elReponse.value;
+    etat.reponses[cle(jour)] = elReponse.value;
     if (minuteur) clearTimeout(minuteur);
     minuteur = setTimeout(function () {
       minuteur = null;
@@ -291,20 +518,26 @@
 
   // ---- Résumé de parcours ----
   function ouvrirResume() {
+    var p = parcoursCourant();
     elResumeCorps.textContent = "";
-    for (var i = 1; i <= NB; i++) {
+    var s1 = document.createElement("p");
+    s1.className = "intro";
+    s1.style.marginTop = "0";
+    s1.textContent = p.titre;
+    elResumeCorps.appendChild(s1);
+    for (var i = 1; i <= p.Q.length; i++) {
       var bloc = document.createElement("div");
       bloc.className = "rbloc";
-      bloc.style.setProperty("--t", TONS[i - 1]);
+      bloc.style.setProperty("--t", TONS[(i - 1) % TONS.length]);
       bloc.setAttribute("data-j", String(i));
       var num = document.createElement("div");
       num.className = "rnum";
       num.textContent = "Jour " + i;
       var q = document.createElement("div");
       q.className = "rq";
-      q.textContent = QUESTIONS[i - 1];
+      q.textContent = p.Q[i - 1];
       var a = document.createElement("p");
-      var r = etat.reponses[String(i)];
+      var r = etat.reponses[cle(i)];
       var vide = !(r && r.replace(/\s/g, "") !== "");
       a.className = "ra" + (vide ? " vide" : "");
       a.textContent = vide ? "(pas encore répondu)" : r.trim();
@@ -332,7 +565,7 @@
     var b = e.target && e.target.closest ? e.target.closest(".rbloc") : null;
     if (!b) return;
     var n = parseInt(b.getAttribute("data-j"), 10);
-    if (n >= 1 && n <= NB) { fermerResume(); aller(n); }
+    if (n >= 1 && n <= parcoursCourant().Q.length) { fermerResume(); aller(n); }
   });
   document.getElementById("btnExporterResume").addEventListener("click", function () {
     fermerResume();
@@ -364,14 +597,15 @@
   }
 
   function exporterTxt() {
+    var p = parcoursCourant();
     var l = [];
-    l.push("Mieux-être — mes sept réponses");
+    l.push("Mieux-être — " + p.titre);
     l.push("Exporté le " + dateLongue());
     l.push("");
-    for (var i = 1; i <= NB; i++) {
+    for (var i = 1; i <= p.Q.length; i++) {
       l.push("Jour " + i);
-      l.push(QUESTIONS[i - 1]);
-      var r = etat.reponses[String(i)];
+      l.push(p.Q[i - 1]);
+      var r = etat.reponses[cle(i)];
       l.push(r && r.replace(/\s/g, "") !== "" ? r.trim() : "(pas encore répondu)");
       l.push("");
     }
@@ -381,7 +615,7 @@
   document.getElementById("btnTxt").addEventListener("click", exporterTxt);
 
   document.getElementById("btnJson").addEventListener("click", function () {
-    var d = { app: "mieux-etre", version: 1, reponses: etat.reponses };
+    var d = { app: "mieux-etre", version: 2, parcours: etat.parcours, reponses: etat.reponses };
     telecharger("mieux-etre-sauvegarde.json", JSON.stringify(d, null, 2), "application/json");
   });
 
@@ -394,11 +628,19 @@
         var d = JSON.parse(String(lecteur.result));
         if (!d || !d.reponses || typeof d.reponses !== "object") throw new Error("format");
         var neuf = {};
-        for (var i = 1; i <= NB; i++) {
-          var v = d.reponses[String(i)];
-          if (typeof v === "string") neuf[String(i)] = v;
+        var cles = Object.keys(d.reponses);
+        var nouveauFormat = false;
+        for (var i = 0; i < cles.length; i++) if (cles[i].indexOf(":") !== -1) nouveauFormat = true;
+        for (var j = 0; j < cles.length; j++) {
+          var v = d.reponses[cles[j]];
+          if (typeof v !== "string") continue;
+          var k = cles[j];
+          if (!nouveauFormat && /^\d+$/.test(k)) k = "auto:" + k;
+          neuf[k] = v;
         }
         etat.reponses = neuf;
+        if (typeof d.parcours === "string") etat.parcours = d.parcours;
+        remplirSelecteur();
         sauver();
         jour = premierJourACrire();
         rendre();
@@ -436,6 +678,7 @@
   });
 
   charger();
+  remplirSelecteur();
   jour = premierJourACrire();
   rendre();
 })();
