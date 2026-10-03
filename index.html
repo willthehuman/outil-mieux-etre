@@ -101,6 +101,14 @@
   .rbloc .rq { font-size: 13.5px; color: #8a8391; margin: 2px 0 6px; }
   .rbloc .ra { font-size: 15.5px; color: #2c3642; white-space: pre-wrap; margin: 0; }
   .rbloc .ra.vide { color: #97a2ad; font-style: italic; }
+
+  .archbox { margin-top: 24px; }
+  .archbox h3 { font-size: 12.5px; letter-spacing: 1.4px; text-transform: uppercase; color: #97a2ad; margin: 0 0 10px; text-align: center; font-weight: 600; }
+  .archrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #fff; border: 1.5px solid #e9e4dc; border-radius: 14px; padding: 10px 14px; margin: 0 0 8px; }
+  .archrow .ad { font-size: 15px; color: #2c3642; }
+  .archrow .an { font-size: 13px; color: #97a2ad; }
+  .archrow button { background: #e8f1f9; color: #02547a; border: none; border-radius: 10px; padding: 7px 12px; font-family: inherit; font-size: 14px; cursor: pointer; flex: none; }
+  .archrow button:hover { background: #d9eafa; }
 </style>
 </head>
 <body>
@@ -134,6 +142,7 @@
 
   <p class="toutnote" id="toutnote" hidden>Ton parcours est complet — tes réponses t'attendent quand tu veux les relire.</p>
   <button class="bouton large" id="btnResume" type="button" hidden style="margin-top:12px">Voir mon résumé de parcours</button>
+  <div id="archivesBox"></div>
   <p class="mention">Un outil d'Authentique sexologie. L'utilisation est autonome et ne remplace pas une consultation ni un suivi avec une sexologue. Il est possible de revoir vos réponses lors d'une intervention brève : <a href="https://authentiquesexo.ca" target="_blank" rel="noopener">authentiquesexo.ca</a>.</p>
 </div>
 
@@ -152,8 +161,16 @@
   <h2>Ton parcours</h2>
   <p class="intro" style="margin-top:0">Voici ce que tu as semé — tes mots, dans l'ordre. Touche un jour pour le relire.</p>
   <div id="resumeCorps"></div>
+  <button class="bouton large" id="btnRecommencer" type="button" style="margin-top:14px">Recommencer ce parcours</button>
   <button class="bouton clair large" id="btnExporterResume" type="button">Exporter mon résumé (texte)</button>
   <button class="bouton large" id="btnFermerResume" type="button">Fermer</button>
+</section>
+
+<div class="voile" id="voileArch" hidden></div>
+<section class="panneau resume" id="archPan" hidden>
+  <h2 id="archTitre">Parcours terminé</h2>
+  <div id="archCorps"></div>
+  <button class="bouton large" id="btnFermerArch" type="button">Fermer</button>
 </section>
 
 <script>
@@ -320,7 +337,7 @@
     window.localStorage.removeItem("__test_mt");
   } catch (e) { stockageOk = false; }
 
-  var etat = { version: 2, parcours: "auto", reponses: {} };
+  var etat = { version: 3, parcours: "auto", reponses: {}, archives: [] };
 
   function parcoursCourant() {
     for (var i = 0; i < PARCOURS.length; i++) if (PARCOURS[i].id === etat.parcours) return PARCOURS[i];
@@ -347,13 +364,14 @@
           etat.reponses[k] = v;
         }
       }
+      etat.archives = normaliserArchives(d.archives);
     } catch (e) { /* on repart à vide */ }
   }
 
   function sauver() {
     if (!stockageOk) return;
     try {
-      window.localStorage.setItem(CLE, JSON.stringify({ version: 2, parcours: etat.parcours, reponses: etat.reponses }));
+      window.localStorage.setItem(CLE, JSON.stringify({ version: 3, parcours: etat.parcours, reponses: etat.reponses, archives: etat.archives }));
     } catch (e) { /* silencieux */ }
   }
 
@@ -376,6 +394,9 @@
   var elSel = document.getElementById("selParcours");
   var elAudio = document.getElementById("btnAudio");
   var elIcoAudio = document.getElementById("icoAudio");
+  var elArchives = document.getElementById("archivesBox");
+  var elVoileArch = document.getElementById("voileArch");
+  var elArchPan = document.getElementById("archPan");
   var TEXTE_EFFACER = "Effacer toutes mes réponses";
 
   var jour = 1;
@@ -399,6 +420,43 @@
     var p = parcoursCourant();
     for (var i = 1; i <= p.Q.length; i++) if (!repondu(i)) return false;
     return true;
+  }
+
+  function dateISO() {
+    var d = new Date();
+    var m = d.getMonth() + 1, j = d.getDate();
+    return d.getFullYear() + "-" + (m < 10 ? "0" : "") + m + "-" + (j < 10 ? "0" : "") + j;
+  }
+
+  function fmtDateISO(s) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    var p = s.split("-");
+    return parseInt(p[2], 10) + " " + MOIS[parseInt(p[1], 10) - 1] + " " + p[0];
+  }
+
+  function normaliserArchives(liste) {
+    var out = [];
+    if (!Array.isArray(liste)) return out;
+    for (var a = 0; a < liste.length && out.length < 50; a++) {
+      var ar = liste[a];
+      if (!ar || typeof ar !== "object" || !ar.reponses) continue;
+      var par = null;
+      for (var q = 0; q < PARCOURS.length; q++) if (PARCOURS[q].id === ar.parcours) par = PARCOURS[q];
+      if (!par) continue;
+      var rep = {};
+      var clesAr = Object.keys(ar.reponses);
+      for (var c = 0; c < clesAr.length; c++) {
+        var n = parseInt(clesAr[c], 10);
+        if (n >= 1 && n <= par.Q.length && typeof ar.reponses[clesAr[c]] === "string") rep[n] = ar.reponses[clesAr[c]];
+      }
+      out.push({
+        id: typeof ar.id === "string" ? ar.id : String(Date.now()) + "-" + a,
+        parcours: ar.parcours,
+        fin: typeof ar.fin === "string" ? ar.fin : "",
+        reponses: rep
+      });
+    }
+    return out;
   }
 
   function remplirSelecteur() {
@@ -455,6 +513,7 @@
     var fini = toutRepondu();
     elToutNote.hidden = !fini;
     elBtnResume.hidden = !fini;
+    rendreArchives();
   }
 
   function aller(n) {
@@ -572,6 +631,121 @@
     exporterTxt();
   });
 
+  // ---- Archives de parcours (rétabli le parcours terminé, repart à neuf) ----
+  function rendreArchives() {
+    elArchives.textContent = "";
+    var p = parcoursCourant();
+    var mes = [];
+    for (var a = 0; a < etat.archives.length; a++) if (etat.archives[a].parcours === p.id) mes.push(etat.archives[a]);
+    if (!mes.length) return;
+    var box = document.createElement("div");
+    box.className = "archbox";
+    var h = document.createElement("h3");
+    h.textContent = "Parcours passés (" + mes.length + ")";
+    box.appendChild(h);
+    for (var i = 0; i < mes.length; i++) box.appendChild(creerLigneArchive(mes[i]));
+    elArchives.appendChild(box);
+  }
+
+  function creerLigneArchive(ar) {
+    var row = document.createElement("div");
+    row.className = "archrow";
+    var d = document.createElement("div");
+    var dd = document.createElement("div");
+    dd.className = "ad";
+    dd.textContent = "Terminé le " + (ar.fin ? fmtDateISO(ar.fin) : "—");
+    var nn = document.createElement("div");
+    nn.className = "an";
+    var nb = 0, ks = Object.keys(ar.reponses);
+    for (var z = 0; z < ks.length; z++) if (ar.reponses[ks[z]] && ar.reponses[ks[z]].replace(/\s/g, "") !== "") nb++;
+    nn.textContent = nb + " réponse" + (nb > 1 ? "s" : "");
+    d.appendChild(dd);
+    d.appendChild(nn);
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = "Relire";
+    b.addEventListener("click", function () { ouvrirArchive(ar); });
+    row.appendChild(d);
+    row.appendChild(b);
+    return row;
+  }
+
+  function ouvrirArchive(ar) {
+    var p = null;
+    for (var q = 0; q < PARCOURS.length; q++) if (PARCOURS[q].id === ar.parcours) p = PARCOURS[q];
+    if (!p) return;
+    document.getElementById("archTitre").textContent = "Parcours terminé" + (ar.fin ? " le " + fmtDateISO(ar.fin) : "");
+    var corps = document.getElementById("archCorps");
+    corps.textContent = "";
+    var s0 = document.createElement("p");
+    s0.className = "intro";
+    s0.style.marginTop = "0";
+    s0.textContent = p.titre;
+    corps.appendChild(s0);
+    for (var i = 1; i <= p.Q.length; i++) {
+      var r = ar.reponses[i] || ar.reponses[String(i)];
+      if (!r || r.replace(/\s/g, "") === "") continue;
+      var bloc = document.createElement("div");
+      bloc.className = "rbloc";
+      bloc.style.setProperty("--t", TONS[(i - 1) % TONS.length]);
+      var num = document.createElement("div");
+      num.className = "rnum";
+      num.textContent = "Jour " + i;
+      var qq = document.createElement("div");
+      qq.className = "rq";
+      qq.textContent = p.Q[i - 1];
+      var aa = document.createElement("p");
+      aa.className = "ra";
+      aa.textContent = r.trim();
+      bloc.appendChild(num);
+      bloc.appendChild(qq);
+      bloc.appendChild(aa);
+      corps.appendChild(bloc);
+    }
+    elVoileArch.hidden = false;
+    elArchPan.hidden = false;
+  }
+
+  function fermerArchive() { elVoileArch.hidden = true; elArchPan.hidden = true; }
+
+  var elBtnRecommencer = document.getElementById("btnRecommencer");
+  var recoConfirme = false;
+  var recoMinuteur = null;
+
+  function resetRecommencer() {
+    recoConfirme = false;
+    if (recoMinuteur) { clearTimeout(recoMinuteur); recoMinuteur = null; }
+    elBtnRecommencer.textContent = "Recommencer ce parcours";
+  }
+
+  elBtnRecommencer.addEventListener("click", function () {
+    if (!recoConfirme) {
+      recoConfirme = true;
+      elBtnRecommencer.textContent = "Clique encore : tes réponses seront archivées";
+      if (recoMinuteur) clearTimeout(recoMinuteur);
+      recoMinuteur = setTimeout(resetRecommencer, 4500);
+      return;
+    }
+    var p = parcoursCourant();
+    var rep = {};
+    for (var i = 1; i <= p.Q.length; i++) {
+      var r = etat.reponses[cle(i)];
+      if (r && r.replace(/\s/g, "") !== "") rep[i] = r;
+    }
+    etat.archives.unshift({ id: "a" + Date.now(), parcours: p.id, fin: dateISO(), reponses: rep });
+    if (etat.archives.length > 50) etat.archives = etat.archives.slice(0, 50);
+    for (var k = 1; k <= p.Q.length; k++) delete etat.reponses[cle(k)];
+    sauver();
+    resetRecommencer();
+    fermerResume();
+    arreterAudio();
+    jour = 1;
+    rendre();
+  });
+
+  document.getElementById("btnFermerArch").addEventListener("click", fermerArchive);
+  elVoileArch.addEventListener("click", fermerArchive);
+
   // ---- Réglages ----
   function ouvrirPanneau() { elVoile.hidden = false; elPanneau.hidden = false; }
   function fermerPanneau() { elVoile.hidden = true; elPanneau.hidden = true; resetEffacer(); }
@@ -615,7 +789,7 @@
   document.getElementById("btnTxt").addEventListener("click", exporterTxt);
 
   document.getElementById("btnJson").addEventListener("click", function () {
-    var d = { app: "mieux-etre", version: 2, parcours: etat.parcours, reponses: etat.reponses };
+    var d = { app: "mieux-etre", version: 3, parcours: etat.parcours, reponses: etat.reponses, archives: etat.archives };
     telecharger("mieux-etre-sauvegarde.json", JSON.stringify(d, null, 2), "application/json");
   });
 
@@ -640,6 +814,7 @@
         }
         etat.reponses = neuf;
         if (typeof d.parcours === "string") etat.parcours = d.parcours;
+        if (Array.isArray(d.archives)) etat.archives = normaliserArchives(d.archives);
         remplirSelecteur();
         sauver();
         jour = premierJourACrire();
@@ -671,6 +846,7 @@
       return;
     }
     etat.reponses = {};
+    etat.archives = [];
     sauver();
     jour = 1;
     rendre();
