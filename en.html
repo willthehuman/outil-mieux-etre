@@ -61,6 +61,16 @@
   }
   .btnAudio:hover { border-color: #6b8dab; color: #6b8dab; }
   .btnAudio.on { background: #6b8dab; border-color: #6b8dab; color: #fff; }
+  .btnInfo {
+    position: absolute; top: 14px; right: 62px;
+    width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+    border: 1.5px solid #e7e2da; background: #fff; color: #7b8693;
+    display: flex; align-items: center; justify-content: center; padding: 0;
+  }
+  .btnInfo:hover { border-color: #6b8dab; color: #6b8dab; }
+  .infVolet { font-size: .95rem; margin: 0 0 10px; color: #2c3642; }
+  .infVolet b { color: #6b8dab; }
+
   .intro { color: #8f8896; font-size: 14.5px; margin: 0 0 12px; padding-right: 44px; }
   .question { font-size: 21px; line-height: 1.45; font-weight: 600; margin: 0 0 16px; padding-right: 8px; }
   textarea {
@@ -132,6 +142,9 @@
     <button class="btnAudio" id="btnAudio" type="button" aria-pressed="false" title="Listen to the question">
       <svg id="icoAudio" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>
     </button>
+    <button class="btnInfo" id="btnInfo" type="button" title="Learn more">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+    </button>
     <p class="jourlabel" id="jourLabel"></p>
     <p class="volet" id="volet" hidden></p>
     <p class="intro" id="intro"></p>
@@ -175,6 +188,13 @@
   <h2 id="archTitre">Journey completed</h2>
   <div id="archCorps"></div>
   <button class="bouton large" id="btnFermerArch" type="button">Close</button>
+</section>
+
+<div class="voile" id="voileInfo" hidden></div>
+<section class="panneau resume" id="infoPan" hidden>
+  <h2 id="infoTitre">The concept</h2>
+  <div id="infoCorps"></div>
+  <button class="bouton large" id="btnFermerInfo" type="button">Close</button>
 </section>
 
 <script>
@@ -350,6 +370,57 @@
       ]
     }
   ];
+  var INFOS = {
+    auto: {
+      t: "Self-compassion",
+      p: [
+        "Self-compassion is treating yourself the way you would treat someone you love who is hurting — not letting yourself go, not self-pity: speaking to yourself fairly.",
+        "It has three ingredients (from Kristin Neff's work):",
+      ],
+      volets: [
+        ["Kindness", "speaking to yourself gently instead of harshly."],
+        ["Common humanity", "remembering that suffering is part of being human — no one is alone in this."],
+        ["Mindful presence", "looking at what is here, without drowning in it or denying it."],
+      ],
+      fin: "The seven days alternate these three parts — that balance is what roots it."
+    },
+    trois: {
+      t: "Three weeks for yourself",
+      p: [
+        "A longer journey in three movements: looking at what is here, speaking to yourself differently, then moving forward.",
+        "Repetition makes the difference — not perfection. Days when you write three words count as much as the big pages.",
+      ],
+    },
+    conf: {
+      t: "Confidence",
+      p: [
+        "Confidence is not a magic state: it is the sum of concrete proof and fair words, accumulated over time.",
+        "This journey helps you see what you already do well, and to speak to yourself like someone you believe in.",
+      ],
+    },
+    cole: {
+      t: "Anger",
+      p: [
+        "Anger is not an enemy: it is a signal. It protects something — a boundary, a value, a need.",
+        "Listening to that signal and expressing it without breaking the bond: that is the skill. And it can be learned.",
+      ],
+    },
+    deui: {
+      t: "Grief and transitions",
+      p: [
+        "Every passage — chosen or not — asks you to leave something behind and get used to an after.",
+        "Finding it heavy is not weakness: it is the normal work of grief and transitions. It gets done at your own pace.",
+      ],
+    },
+    joie: {
+      t: "Joy",
+      p: [
+        "Joy can be cultivated: learning to notice it, to linger on it, and even to make a little room for it.",
+        "That is not naivety — it is training in the good, to balance everything else.",
+      ],
+    },
+  };
+
   var TONS = ["#6b8dab", "#b2738c", "#806072", "#bd8a6c", "#7fa08a", "#c2a665", "#6a9d92",
               "#6b8dab", "#b2738c", "#806072", "#bd8a6c", "#7fa08a", "#c2a665", "#6a9d92",
               "#6b8dab", "#b2738c", "#806072", "#bd8a6c", "#7fa08a", "#c2a665", "#6a9d92"];
@@ -793,6 +864,49 @@
 
   document.getElementById("btnFermerArch").addEventListener("click", fermerArchive);
   elVoileArch.addEventListener("click", fermerArchive);
+
+  // ---- Bulles de concepts (info) ----
+  function ouvrirInfo() {
+    var p = parcoursCourant();
+    var inf = INFOS[p.id];
+    if (!inf) return;
+    document.getElementById("infoTitre").textContent = inf.t;
+    var corps = document.getElementById("infoCorps");
+    corps.textContent = "";
+    inf.p.forEach(function (para) {
+      var el = document.createElement("p");
+      el.className = "intro";
+      el.style.marginTop = "0";
+      el.textContent = para;
+      corps.appendChild(el);
+    });
+    if (inf.volets) {
+      inf.volets.forEach(function (vo) {
+        var d = document.createElement("div");
+        d.className = "infVolet";
+        var b = document.createElement("b");
+        b.textContent = vo[0];
+        d.appendChild(b);
+        d.appendChild(document.createTextNode(" — " + vo[1]));
+        corps.appendChild(d);
+      });
+    }
+    if (inf.fin) {
+      var f = document.createElement("p");
+      f.className = "intro";
+      f.textContent = inf.fin;
+      corps.appendChild(f);
+    }
+    elVoileInfo.hidden = false;
+    elInfoPan.hidden = false;
+  }
+  function fermerInfo() { elVoileInfo.hidden = true; elInfoPan.hidden = true; }
+  var elBtnInfo = document.getElementById("btnInfo");
+  var elVoileInfo = document.getElementById("voileInfo");
+  var elInfoPan = document.getElementById("infoPan");
+  elBtnInfo.addEventListener("click", ouvrirInfo);
+  elVoileInfo.addEventListener("click", fermerInfo);
+  document.getElementById("btnFermerInfo").addEventListener("click", fermerInfo);
 
   // ---- Settings ----
   function ouvrirPanneau() { elVoile.hidden = false; elPanneau.hidden = false; }
