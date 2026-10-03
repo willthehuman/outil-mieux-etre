@@ -8,8 +8,8 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {
-    background: #f4f7fb;
-    color: #25313d;
+    background: #f7f4ef;
+    color: #2c3642;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 17px;
     line-height: 1.55;
@@ -18,78 +18,90 @@
   .page { max-width: 560px; margin: 0 auto; padding: 26px 16px 56px; }
   .entete { text-align: center; margin-bottom: 18px; position: relative; }
   .entete h1 { font-size: 29px; margin: 0 0 6px; font-weight: 600; }
-  .soust { color: #7b8b99; font-size: 15px; margin: 0; }
+  .soust { color: #7e8a97; font-size: 15px; margin: 0; }
   #btnReglages {
     position: absolute; right: 0; top: 2px;
-    background: none; border: none; color: #8fa0af;
+    background: none; border: none; color: #97a2ad;
     font-size: 15px; font-family: inherit; cursor: pointer; padding: 4px 2px;
   }
-  #btnReglages:hover { color: #25313d; }
+  #btnReglages:hover { color: #2c3642; }
 
   .jours { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 16px 0 20px; }
   .pastille {
     width: 44px; height: 44px; border-radius: 50%;
-    border: 1.5px solid #d9e4ef; background: #ffffff; color: #8295a6;
+    border: 1.5px solid #e2ddd5; background: #ffffff; color: #96a0ab;
     font-size: 16px; font-family: inherit; cursor: pointer; padding: 0;
+    --j: #036798; --js: #e3eef8;
   }
-  .pastille.rempli { background: #e3eef8; border-color: #bcd4ea; color: #036798; font-weight: 600; }
-  .pastille.active { background: #036798; border-color: #036798; color: #fff; font-weight: 600; }
+  .pastille.rempli { background: var(--js); border-color: var(--j); color: var(--j); font-weight: 600; }
+  .pastille.active { background: var(--j); border-color: var(--j); color: #fff; font-weight: 600; }
 
   .carte {
     background: #ffffff; border-radius: 20px; padding: 24px 20px 18px;
-    box-shadow: 0 10px 30px rgba(15, 55, 90, 0.08);
+    border-left: 4px solid var(--j, #036798);
+    box-shadow: 0 10px 30px rgba(46, 38, 28, 0.07);
   }
-  .jourlabel { color: #8fa0af; font-size: 13px; letter-spacing: 1.6px; text-transform: uppercase; margin: 0 0 10px; }
+  .jourlabel { color: var(--j, #036798); font-size: 13px; letter-spacing: 1.6px; text-transform: uppercase; margin: 0 0 10px; font-weight: 600; }
+  .intro { color: #8a8391; font-size: 14.5px; margin: 0 0 12px; }
   .question { font-size: 21px; line-height: 1.45; font-weight: 600; margin: 0 0 16px; }
   textarea {
     width: 100%; min-height: 132px; resize: vertical;
-    border: 1.5px solid #dce7f1; border-radius: 14px; padding: 12px 14px;
-    font-family: inherit; font-size: 16.5px; line-height: 1.5; color: #25313d;
+    border: 1.5px solid #e4dfd7; border-radius: 14px; padding: 12px 14px;
+    font-family: inherit; font-size: 16.5px; line-height: 1.5; color: #2c3642;
     background: #fff;
   }
   textarea:focus { outline: none; border-color: #036798; }
-  .aide { color: #8fa0af; font-size: 13.5px; margin: 10px 2px 0; }
+  .aide { color: #97a2ad; font-size: 13.5px; margin: 10px 2px 0; }
   .bas { display: flex; justify-content: space-between; gap: 10px; margin-top: 16px; }
   .bouton {
     background: #036798; color: #fff; border: none; border-radius: 12px;
     padding: 13px 16px; font-size: 15.5px; font-family: inherit; cursor: pointer;
   }
-  .bouton:disabled { background: #e3eaf1; color: #a9b8c4; cursor: default; }
+  .bouton:disabled { background: #e6e2da; color: #aaa49a; cursor: default; }
   .bouton.clair { background: #e8f1f9; color: #02547a; }
   .bouton.danger { background: #fbe9f1; color: #9c3d63; }
   .bouton.large { display: block; width: 100%; text-align: center; margin: 0 0 10px; }
-  .toutnote { text-align: center; color: #467a63; font-size: 15px; margin: 18px 8px 0; }
-  .mention { text-align: center; color: #7b8b99; font-size: 13.5px; margin: 22px 8px 0; }
+  .toutnote { text-align: center; color: #47795f; font-size: 15px; margin: 18px 8px 0; }
+  .mention { text-align: center; color: #7e8a97; font-size: 13.5px; margin: 22px 8px 0; }
   .mention a { color: #036798; }
 
-  .voile { position: fixed; top: 0; right: 0; bottom: 0; left: 0; background: rgba(25, 40, 55, 0.35); z-index: 10; }
+  .voile { position: fixed; top: 0; right: 0; bottom: 0; left: 0; background: rgba(40, 34, 28, 0.35); z-index: 10; }
   .panneau {
     position: fixed; left: 50%; bottom: 0; transform: translateX(-50%);
     width: 100%; max-width: 560px; z-index: 11;
-    background: #ffffff; border-radius: 20px 20px 0 0;
+    background: #fffdfa; border-radius: 20px 20px 0 0;
     padding: 20px 18px 24px;
-    box-shadow: 0 -12px 40px rgba(15, 55, 90, 0.18);
+    box-shadow: 0 -12px 40px rgba(46, 38, 28, 0.18);
   }
   .panneau h2 { margin: 0 0 14px; font-size: 19px; }
+  .panneau.resume { max-height: 88vh; overflow: auto; }
   .importlabel { cursor: pointer; }
   .importlabel input { display: none; }
+
+  .rbloc { border-left: 3px solid var(--t, #036798); padding: 4px 0 4px 12px; margin: 0 0 14px; cursor: pointer; border-radius: 2px; }
+  .rbloc:hover { background: #f7f4ef; }
+  .rbloc .rnum { font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--t, #036798); font-weight: 600; }
+  .rbloc .rq { font-size: 13.5px; color: #8a8391; margin: 2px 0 6px; }
+  .rbloc .ra { font-size: 15.5px; color: #2c3642; white-space: pre-wrap; margin: 0; }
+  .rbloc .ra.vide { color: #97a2ad; font-style: italic; }
 </style>
 </head>
 <body>
 <div class="page">
   <header class="entete">
     <h1>Mieux-être</h1>
-    <p class="soust">Sept questions d'autocompassion — une par jour, à ton rythme.</p>
+    <p class="soust">Sept questions d'autocompassion — une par jour, à ton rythme, sans pression.</p>
     <button id="btnReglages" type="button">Réglages</button>
   </header>
 
   <nav class="jours" id="navJours" aria-label="Choisir un jour"></nav>
 
-  <section class="carte">
+  <section class="carte" id="carte">
     <p class="jourlabel" id="jourLabel"></p>
+    <p class="intro" id="intro"></p>
     <h2 class="question" id="question"></h2>
     <textarea id="reponse" placeholder="Écris ici, pour toi."></textarea>
-    <p class="aide">Ce que tu écris se garde tout seul, sur cet appareil seulement.</p>
+    <p class="aide">Ce que tu écris se garde tout seul, sur cet appareil seulement — rien ne part ailleurs.</p>
     <div class="bas">
       <button class="bouton clair" id="btnPrec" type="button">← Jour précédent</button>
       <button class="bouton" id="btnSuiv" type="button">Jour suivant →</button>
@@ -97,6 +109,7 @@
   </section>
 
   <p class="toutnote" id="toutnote" hidden>Tes sept réponses sont là, au complet — elles t'attendent quand tu veux les relire.</p>
+  <button class="bouton large" id="btnResume" type="button" hidden style="margin-top:12px">Voir mon résumé de sept jours</button>
   <p class="mention">Un outil d'Authentique sexologie. L'utilisation est autonome et ne remplace pas une consultation ni un suivi avec une sexologue. Il est possible de revoir vos réponses lors d'une intervention brève : <a href="https://authentiquesexo.ca" target="_blank" rel="noopener">authentiquesexo.ca</a>.</p>
 </div>
 
@@ -108,6 +121,15 @@
   <label class="bouton clair large importlabel">Importer une sauvegarde (.json)<input type="file" id="inpImport" accept=".json,application/json"></label>
   <button class="bouton danger large" id="btnEffacer" type="button">Effacer toutes mes réponses</button>
   <button class="bouton large" id="btnFermer" type="button">Fermer</button>
+</section>
+
+<div class="voile" id="voileResume" hidden></div>
+<section class="panneau resume" id="resume" hidden>
+  <h2>Ton parcours, ces sept jours</h2>
+  <p class="intro" style="margin-top:0">Voici ce que tu as semé cette semaine — tes mots, dans l'ordre. Touche un jour pour le relire.</p>
+  <div id="resumeCorps"></div>
+  <button class="bouton clair large" id="btnExporterResume" type="button">Exporter mon résumé (texte)</button>
+  <button class="bouton large" id="btnFermerResume" type="button">Fermer</button>
 </section>
 
 <script>
@@ -123,6 +145,17 @@
     "Quelle petite chose, aujourd'hui, prendrait soin de toi ? Quelque chose de simple, de faisable.",
     "Comment veux-tu te parler, à partir de maintenant ? Qu'est-ce que tu veux garder de cette semaine ?"
   ];
+  var INTROS = [
+    "On commence tout doucement. Pas besoin de belles phrases — juste ce qui est vrai aujourd'hui.",
+    "On juge souvent les autres avec plus de douceur qu'on ne se juge soi-même. Cette fois, emprunte cette voix-là pour toi.",
+    "Personne d'autre ne les entend, mais elles prennent de la place. Les nommer, c'est déjà les alléger un peu.",
+    "Ce qui est lourd est souvent plus partagé qu'on le pense. L'écrire peut enlever un peu de solitude.",
+    "Pas besoin que ce soit raisonnable ou réalisable. Juste d'être honnête avec ce qui monte.",
+    "On cherche quelque chose de petit et de vrai. Si c'est faisable cette semaine, tant mieux — sinon, ce sera pour un autre jour, sans reproche.",
+    "Dernière question. Garde de cette semaine ce qui te fait du bien — et laisse aller le reste, sans culpabilité."
+  ];
+  var TONS = ["#036798", "#b8437e", "#7a2e4d", "#c1704a", "#5e8a72", "#c98a2b", "#2e8b7d"];
+  var SOFTS = ["#e3eef8", "#fbe9f1", "#f6e8ee", "#fdeee5", "#e9f2ec", "#fdf3e0", "#e6f4f1"];
   var NB = QUESTIONS.length;
   var CLE = "mieux-etre-v1";
   var MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
@@ -158,14 +191,20 @@
   }
 
   var elJours = document.getElementById("navJours");
+  var elCarte = document.getElementById("carte");
   var elLabel = document.getElementById("jourLabel");
+  var elIntro = document.getElementById("intro");
   var elQuestion = document.getElementById("question");
   var elReponse = document.getElementById("reponse");
   var elPrec = document.getElementById("btnPrec");
   var elSuiv = document.getElementById("btnSuiv");
   var elToutNote = document.getElementById("toutnote");
+  var elBtnResume = document.getElementById("btnResume");
   var elVoile = document.getElementById("voile");
   var elPanneau = document.getElementById("panneau");
+  var elVoileResume = document.getElementById("voileResume");
+  var elResume = document.getElementById("resume");
+  var elResumeCorps = document.getElementById("resumeCorps");
   var elEffacer = document.getElementById("btnEffacer");
   var TEXTE_EFFACER = "Effacer toutes mes réponses";
 
@@ -196,6 +235,8 @@
     for (var i = 1; i <= NB; i++) {
       var b = document.createElement("button");
       b.type = "button";
+      b.style.setProperty("--j", TONS[i - 1]);
+      b.style.setProperty("--js", SOFTS[i - 1]);
       b.className = "pastille" + (i === jour ? " active" : "") + (repondu(i) ? " rempli" : "");
       b.textContent = String(i);
       b.setAttribute("aria-label", "Jour " + i + (repondu(i) ? " — répondu" : ""));
@@ -207,13 +248,17 @@
   }
 
   function rendre() {
+    elCarte.style.setProperty("--j", TONS[jour - 1]);
     elLabel.textContent = "Jour " + jour + " sur " + NB;
+    elIntro.textContent = INTROS[jour - 1];
     elQuestion.textContent = QUESTIONS[jour - 1];
     elReponse.value = etat.reponses[String(jour)] || "";
     elPrec.disabled = jour <= 1;
     elSuiv.disabled = jour >= NB;
     rendreJours();
-    elToutNote.hidden = !toutRepondu();
+    var fini = toutRepondu();
+    elToutNote.hidden = !fini;
+    elBtnResume.hidden = !fini;
   }
 
   function aller(n) {
@@ -230,7 +275,9 @@
       minuteur = null;
       sauver();
       rendreJours();
-      elToutNote.hidden = !toutRepondu();
+      var fini = toutRepondu();
+      elToutNote.hidden = !fini;
+      elBtnResume.hidden = !fini;
     }, 400);
   });
 
@@ -241,6 +288,56 @@
 
   elPrec.addEventListener("click", function () { aller(jour - 1); });
   elSuiv.addEventListener("click", function () { aller(jour + 1); });
+
+  // ---- Résumé de parcours ----
+  function ouvrirResume() {
+    elResumeCorps.textContent = "";
+    for (var i = 1; i <= NB; i++) {
+      var bloc = document.createElement("div");
+      bloc.className = "rbloc";
+      bloc.style.setProperty("--t", TONS[i - 1]);
+      bloc.setAttribute("data-j", String(i));
+      var num = document.createElement("div");
+      num.className = "rnum";
+      num.textContent = "Jour " + i;
+      var q = document.createElement("div");
+      q.className = "rq";
+      q.textContent = QUESTIONS[i - 1];
+      var a = document.createElement("p");
+      var r = etat.reponses[String(i)];
+      var vide = !(r && r.replace(/\s/g, "") !== "");
+      a.className = "ra" + (vide ? " vide" : "");
+      a.textContent = vide ? "(pas encore répondu)" : r.trim();
+      bloc.appendChild(num);
+      bloc.appendChild(q);
+      bloc.appendChild(a);
+      elResumeCorps.appendChild(bloc);
+    }
+    var fin = document.createElement("p");
+    fin.className = "intro";
+    fin.style.marginBottom = "14px";
+    fin.textContent = "Si tu veux aller plus loin avec tout ça, ces réponses peuvent être revues en intervention brève avec une sexologue (authentiquesexo.ca). Et rappelle-toi : c'est un outil autonome — il ne remplace pas un suivi.";
+    elResumeCorps.appendChild(fin);
+    elVoileResume.hidden = false;
+    elResume.hidden = false;
+  }
+  function fermerResume() {
+    elVoileResume.hidden = true;
+    elResume.hidden = true;
+  }
+  elBtnResume.addEventListener("click", ouvrirResume);
+  elVoileResume.addEventListener("click", fermerResume);
+  document.getElementById("btnFermerResume").addEventListener("click", fermerResume);
+  elResumeCorps.addEventListener("click", function (e) {
+    var b = e.target && e.target.closest ? e.target.closest(".rbloc") : null;
+    if (!b) return;
+    var n = parseInt(b.getAttribute("data-j"), 10);
+    if (n >= 1 && n <= NB) { fermerResume(); aller(n); }
+  });
+  document.getElementById("btnExporterResume").addEventListener("click", function () {
+    fermerResume();
+    exporterTxt();
+  });
 
   // ---- Réglages ----
   function ouvrirPanneau() { elVoile.hidden = false; elPanneau.hidden = false; }
@@ -266,7 +363,7 @@
     return d.getDate() + " " + MOIS[d.getMonth()] + " " + d.getFullYear();
   }
 
-  document.getElementById("btnTxt").addEventListener("click", function () {
+  function exporterTxt() {
     var l = [];
     l.push("Mieux-être — mes sept réponses");
     l.push("Exporté le " + dateLongue());
@@ -279,7 +376,9 @@
       l.push("");
     }
     telecharger("mieux-etre-reponses.txt", l.join("\n"), "text/plain");
-  });
+  }
+
+  document.getElementById("btnTxt").addEventListener("click", exporterTxt);
 
   document.getElementById("btnJson").addEventListener("click", function () {
     var d = { app: "mieux-etre", version: 1, reponses: etat.reponses };
